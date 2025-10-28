@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #c03c15;
+  --color-primary-dark: #a5270f;
+  --color-secondary: #eaac8a;
+  --color-accent: #4fab9a;
+  --color-background: #bed4d9;
+  --color-text-dark: #504450;
+}
+
+/* Optional: global styles */
+@layer base {
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text-dark);
+  }
+}
+
+/* Reusable components */
+@layer components {
+  .btn {
+    @apply px-4 py-2 font-medium rounded-lg transition-all duration-200;
+  }
+
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-primary-dark);
+  }
+
+  .card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+    padding: 1rem;
+  }
+}
