@@ -12,7 +12,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',          // local dev frontend
-  'https://spend-mate-two.vercel.app/',   // deployed frontend
+  'https://spend-mate-two.vercel.app',   // deployed frontend
 ];
 
 
