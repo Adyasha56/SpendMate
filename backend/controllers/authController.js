@@ -7,11 +7,13 @@ const generateToken = (id) => {
   });
 };
 
+// ---------------- REGISTER ----------------
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password, profession, gender } = req.body;
 
     if (!name || !email || !password || !gender) {
+      console.warn('⚠️ Missing fields during registration:', req.body);
       return res.status(400).json({
         success: false,
         message: 'Please provide all required fields',
@@ -21,6 +23,7 @@ export const registerUser = async (req, res) => {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
+      console.warn('⚠️ Registration attempt with existing email:', email);
       return res.status(400).json({
         success: false,
         message: 'User already exists with this email',
@@ -36,6 +39,7 @@ export const registerUser = async (req, res) => {
     });
 
     if (user) {
+      console.log('✅ New user registered:', user.email);
       res.status(201).json({
         success: true,
         data: {
@@ -49,7 +53,8 @@ export const registerUser = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Register error:', error.message);
+    console.error('❌ Register error:', error.message);
+    console.error('Stack trace:', error.stack);
     res.status(500).json({
       success: false,
       message: 'Server error during registration',
@@ -58,11 +63,13 @@ export const registerUser = async (req, res) => {
   }
 };
 
+// ---------------- LOGIN ----------------
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
+      console.warn('⚠️ Login missing credentials:', req.body);
       return res.status(400).json({
         success: false,
         message: 'Please provide email and password',
@@ -72,6 +79,7 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
+      console.warn('⚠️ Login failed, user not found:', email);
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials',
@@ -81,12 +89,14 @@ export const loginUser = async (req, res) => {
     const isPasswordCorrect = await user.comparePassword(password);
 
     if (!isPasswordCorrect) {
+      console.warn('⚠️ Invalid password for email:', email);
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials',
       });
     }
 
+    console.log('✅ User logged in:', user.email);
     res.status(200).json({
       success: true,
       data: {
@@ -99,7 +109,8 @@ export const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Login error:', error.message);
+    console.error('❌ Login error:', error.message);
+    console.error('Stack trace:', error.stack);
     res.status(500).json({
       success: false,
       message: 'Server error during login',
@@ -108,11 +119,13 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// ---------------- PROFILE ----------------
 export const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
     if (user) {
+      console.log('✅ Profile fetched for:', user.email);
       res.status(200).json({
         success: true,
         data: {
@@ -124,13 +137,15 @@ export const getUserProfile = async (req, res) => {
         },
       });
     } else {
+      console.warn('⚠️ User not found for profile:', req.user._id);
       res.status(404).json({
         success: false,
         message: 'User not found',
       });
     }
   } catch (error) {
-    console.error('Get profile error:', error.message);
+    console.error('❌ Get profile error:', error.message);
+    console.error('Stack trace:', error.stack);
     res.status(500).json({
       success: false,
       message: 'Server error',
